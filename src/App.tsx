@@ -33,23 +33,23 @@ export default function App() {
     </div>
   );
 }
-`.trim()
+`.trim();
 
 const simpleSandpackConfig: SandpackConfig = {
-  defaultPreset: 'react',
+  defaultPreset: "react",
   presets: [
     {
-      label: 'React',
-      name: 'react',
-      meta: 'live react',
-      sandpackTemplate: 'react',
-      sandpackTheme: 'light',
-      snippetFileName: '/App.js',
-      snippetLanguage: 'jsx',
-      initialSnippetContent: defaultSnippetContent
+      label: "React",
+      name: "react",
+      meta: "live react",
+      sandpackTemplate: "react",
+      sandpackTheme: "light",
+      snippetFileName: "/App.js",
+      snippetLanguage: "jsx",
+      initialSnippetContent: defaultSnippetContent,
     },
-  ]
-}
+  ],
+};
 
 function App() {
   return (
@@ -94,9 +94,18 @@ function App() {
           thematicBreakPlugin(),
           linkPlugin(),
           linkDialogPlugin(),
-        codeBlockPlugin({defaultCodeBlockLanguage: 'js'}),
-        sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
-        codeMirrorPlugin({ codeBlockLanguages: { sh: 'bash', js: 'JavaScript', css: 'CSS', java: 'java', go: 'go', rust: 'rust' } }),
+          codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
+          sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
+          codeMirrorPlugin({
+            codeBlockLanguages: {
+              sh: "bash",
+              js: "JavaScript",
+              css: "CSS",
+              java: "java",
+              go: "go",
+              rust: "rust",
+            },
+          }),
           markdownShortcutPlugin(),
         ]}
       />
