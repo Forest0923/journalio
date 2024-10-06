@@ -1,55 +1,142 @@
 import "@mdxeditor/editor/style.css";
 import {
+  AdmonitionDirectiveDescriptor,
   BlockTypeSelect,
   BoldItalicUnderlineToggles,
+  ChangeAdmonitionType,
   ChangeCodeMirrorLanguage,
+  CodeToggle,
   ConditionalContents,
+  CreateLink,
+  DiffSourceToggleWrapper,
+  DirectiveNode,
+  EditorInFocus,
+  InsertAdmonition,
   InsertCodeBlock,
-  InsertSandpack,
+  InsertImage,
+  InsertTable,
+  InsertThematicBreak,
   ListsToggle,
   MDXEditor,
-  SandpackConfig,
-  ShowSandpackInfo,
+  Separator,
+  StrikeThroughSupSubToggles,
   UndoRedo,
   codeBlockPlugin,
   codeMirrorPlugin,
+  diffSourcePlugin,
+  directivesPlugin,
   headingsPlugin,
+  imagePlugin,
   linkDialogPlugin,
   linkPlugin,
   listsPlugin,
   markdownShortcutPlugin,
   quotePlugin,
-  sandpackPlugin,
+  tablePlugin,
   thematicBreakPlugin,
   toolbarPlugin,
 } from "@mdxeditor/editor";
 
-const defaultSnippetContent = `
-export default function App() {
-  return (
-    <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start editing to see some magic happen!</h2>
-    </div>
+function whenInAdmonition(editorInFocus: EditorInFocus | null) {
+  const node = editorInFocus?.rootNode;
+  type AdmonitionKind = "note" | "tip" | "danger" | "info" | "caution";
+
+  if (!node || node.getType() !== "directive") {
+    return false;
+  }
+
+  return ["note", "tip", "danger", "info", "caution"].includes(
+    (node as DirectiveNode).getMdastNode().name as AdmonitionKind
   );
 }
-`.trim();
 
-const simpleSandpackConfig: SandpackConfig = {
-  defaultPreset: "react",
-  presets: [
-    {
-      label: "React",
-      name: "react",
-      meta: "live react",
-      sandpackTemplate: "react",
-      sandpackTheme: "light",
-      snippetFileName: "/App.js",
-      snippetLanguage: "jsx",
-      initialSnippetContent: defaultSnippetContent,
-    },
-  ],
+const Toolbar: React.FC = () => {
+  return (
+    <DiffSourceToggleWrapper>
+      <ConditionalContents
+        options={[
+          {
+            when: (editor) => editor?.editorType === "codeblock",
+            contents: () => <ChangeCodeMirrorLanguage />,
+          },
+          {
+            fallback: () => (
+              <>
+                <ConditionalContents
+                  options={[
+                    {
+                      when: whenInAdmonition,
+                      contents: () => <ChangeAdmonitionType />,
+                    },
+                    { fallback: () => <BlockTypeSelect /> },
+                  ]}
+                />
+
+                <Separator />
+
+                <UndoRedo />
+
+                <Separator />
+
+                <BoldItalicUnderlineToggles />
+                <CodeToggle />
+
+                <Separator />
+
+                <StrikeThroughSupSubToggles />
+
+                <Separator />
+
+                <ListsToggle />
+
+                <Separator />
+
+                <CreateLink />
+                <InsertImage />
+
+                <Separator />
+
+                <InsertTable />
+                <InsertThematicBreak />
+
+                <Separator />
+
+                <InsertCodeBlock />
+
+                <ConditionalContents
+                  options={[
+                    {
+                      when: (editorInFocus) => !whenInAdmonition(editorInFocus),
+                      contents: () => (
+                        <>
+                          <Separator />
+                          <InsertAdmonition />
+                        </>
+                      ),
+                    },
+                  ]}
+                />
+              </>
+            ),
+          },
+        ]}
+      />
+    </DiffSourceToggleWrapper>
+  );
 };
+
+async function imageUploadHandler(image: File) {
+  const formData = new FormData();
+  formData.append("image", image);
+  // send the file to your server and return
+  // the URL of the uploaded image in the response
+  const response = await fetch("/uploads/new", {
+    method: "POST",
+    body: formData,
+  });
+  const json = (await response.json()) as { url: string };
+  return json.url;
+}
 
 function App() {
   return (
@@ -58,35 +145,7 @@ function App() {
         markdown="Hello World"
         plugins={[
           toolbarPlugin({
-            toolbarContents: () => (
-              <>
-                {" "}
-                <BlockTypeSelect />
-                <UndoRedo />
-                <BoldItalicUnderlineToggles />
-                <ListsToggle />
-                <ConditionalContents
-                  options={[
-                    {
-                      when: (editor) => editor?.editorType === "codeblock",
-                      contents: () => <ChangeCodeMirrorLanguage />,
-                    },
-                    {
-                      when: (editor) => editor?.editorType === "sandpack",
-                      contents: () => <ShowSandpackInfo />,
-                    },
-                    {
-                      fallback: () => (
-                        <>
-                          <InsertCodeBlock />
-                          <InsertSandpack />
-                        </>
-                      ),
-                    },
-                  ]}
-                />
-              </>
-            ),
+            toolbarContents: () => <Toolbar />,
           }),
           headingsPlugin(),
           listsPlugin(),
@@ -94,19 +153,29 @@ function App() {
           thematicBreakPlugin(),
           linkPlugin(),
           linkDialogPlugin(),
-          codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
-          sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
+          codeBlockPlugin({ defaultCodeBlockLanguage: "sh" }),
           codeMirrorPlugin({
             codeBlockLanguages: {
-              sh: "bash",
-              js: "JavaScript",
+              c: "c",
               css: "CSS",
-              java: "java",
               go: "go",
+              java: "java",
+              js: "JavaScript",
               rust: "rust",
+              sh: "bash",
+              txt: "text",
             },
           }),
           markdownShortcutPlugin(),
+          diffSourcePlugin({
+            diffMarkdown: "An older version",
+            viewMode: "rich-text",
+          }),
+          imagePlugin({ imageUploadHandler }),
+          tablePlugin(),
+          directivesPlugin({
+            directiveDescriptors: [AdmonitionDirectiveDescriptor],
+          }),
         ]}
       />
     </>
