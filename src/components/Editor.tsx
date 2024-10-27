@@ -36,6 +36,7 @@ import {
   thematicBreakPlugin,
   toolbarPlugin,
 } from "@mdxeditor/editor";
+import { useEffect, useRef, useState } from "react";
 
 function whenInAdmonition(editorInFocus: EditorInFocus | null) {
   const node = editorInFocus?.rootNode;
@@ -50,78 +51,91 @@ function whenInAdmonition(editorInFocus: EditorInFocus | null) {
   );
 }
 
-const Toolbar: React.FC = () => {
+interface EditorProps {
+  date: string;
+  content: string;
+  onContentChange: (content: string) => void;
+  onSave: () => void;
+}
+
+const Toolbar: React.FC<{ onSave: () => void }> = ({ onSave }) => {
   return (
-    <DiffSourceToggleWrapper>
-      <ConditionalContents
-        options={[
-          {
-            when: (editor) => editor?.editorType === "codeblock",
-            contents: () => <ChangeCodeMirrorLanguage />,
-          },
-          {
-            fallback: () => (
-              <>
-                <ConditionalContents
-                  options={[
-                    {
-                      when: whenInAdmonition,
-                      contents: () => <ChangeAdmonitionType />,
-                    },
-                    { fallback: () => <BlockTypeSelect /> },
-                  ]}
-                />
+    <div>
+      <DiffSourceToggleWrapper>
+        <ConditionalContents
+          options={[
+            {
+              when: (editor) => editor?.editorType === "codeblock",
+              contents: () => <ChangeCodeMirrorLanguage />,
+            },
+            {
+              fallback: () => (
+                <>
+                  <ConditionalContents
+                    options={[
+                      {
+                        when: whenInAdmonition,
+                        contents: () => <ChangeAdmonitionType />,
+                      },
+                      { fallback: () => <BlockTypeSelect /> },
+                    ]}
+                  />
 
-                <Separator />
+                  <Separator />
 
-                <UndoRedo />
+                  <UndoRedo />
 
-                <Separator />
+                  <Separator />
 
-                <BoldItalicUnderlineToggles />
-                <CodeToggle />
+                  <BoldItalicUnderlineToggles />
+                  <CodeToggle />
 
-                <Separator />
+                  <Separator />
 
-                <StrikeThroughSupSubToggles />
+                  <StrikeThroughSupSubToggles />
 
-                <Separator />
+                  <Separator />
 
-                <ListsToggle />
+                  <ListsToggle />
 
-                <Separator />
+                  <Separator />
 
-                <CreateLink />
-                <InsertImage />
+                  <CreateLink />
+                  <InsertImage />
 
-                <Separator />
+                  <Separator />
 
-                <InsertTable />
-                <InsertThematicBreak />
+                  <InsertTable />
+                  <InsertThematicBreak />
 
-                <Separator />
+                  <Separator />
 
-                <InsertCodeBlock />
+                  <InsertCodeBlock />
 
-                <ConditionalContents
-                  options={[
-                    {
-                      when: (editorInFocus) => !whenInAdmonition(editorInFocus),
-                      contents: () => (
-                        <>
-                          <Separator />
-                          <InsertAdmonition />
-                        </>
-                      ),
-                    },
-                  ]}
-                />
-              </>
-            ),
-          },
-        ]}
-      />
-    </DiffSourceToggleWrapper>
+                  <ConditionalContents
+                    options={[
+                      {
+                        when: (editorInFocus) =>
+                          !whenInAdmonition(editorInFocus),
+                        contents: () => (
+                          <>
+                            <Separator />
+                            <InsertAdmonition />
+                          </>
+                        ),
+                      },
+                    ]}
+                  />
+                </>
+              ),
+            },
+          ]}
+        />
+      </DiffSourceToggleWrapper>
+      <button style={styles.saveButton} onClick={onSave}>
+        Save
+      </button>
+    </div>
   );
 };
 
@@ -138,14 +152,33 @@ async function imageUploadHandler(image: File) {
   return json.url;
 }
 
-function Editor() {
+const Editor: React.FC<EditorProps> = ({
+  date,
+  content,
+  onContentChange,
+  onSave,
+}) => {
+  const [localContent, setLocalcontent] = useState(content);
+  // const editorRef = useRef(null);
+  const handleContentChange = (markdown: string) => {
+    console.log("markdown:", markdown);
+    setLocalcontent(markdown);
+    onContentChange(markdown);
+  };
+
+  useEffect(() => {
+    console.log("content:", content);
+    setLocalcontent(content);
+  }, [content]);
+
   return (
     <>
       <MDXEditor
-        markdown="Hello World"
+        key={date}
+        markdown={localContent}
         plugins={[
           toolbarPlugin({
-            toolbarContents: () => <Toolbar />,
+            toolbarContents: () => <Toolbar onSave={onSave} />,
           }),
           headingsPlugin(),
           listsPlugin(),
@@ -177,9 +210,25 @@ function Editor() {
             directiveDescriptors: [AdmonitionDirectiveDescriptor],
           }),
         ]}
+        onChange={handleContentChange}
       />
     </>
   );
-}
+};
+
+const styles: { [key: string]: React.CSSProperties } = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+  },
+  saveButton: {
+    marginTop: "10px",
+    padding: "10px 20px",
+    fontSize: "16px",
+    alignSelf: "flex-end",
+    cursor: "pointer",
+  },
+};
 
 export default Editor;
