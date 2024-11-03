@@ -18,6 +18,7 @@ import {
   getYear,
   startOfWeek,
 } from "date-fns";
+import Handlebars from "handlebars";
 
 interface LayoutProps {
   selectedDir: string;
@@ -52,7 +53,17 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir, onSelectJournal }) => {
       setJournalContent(content);
     } catch (error) {
       console.log("error:", error);
-      setJournalContent("# " + format(date, "yyyy/MM/dd"));
+      const templatePath = await join(selectedDir, "templates", "daily.md");
+      if (await exists(templatePath)) {
+        const templateContent = await readTextFile(templatePath);
+        const template = Handlebars.compile(templateContent);
+        const templateVars = {
+          date: format(date, "yyyy/MM/dd"),
+        }
+        setJournalContent(template(templateVars));
+      } else {
+        setJournalContent("# " + format(date, "yyyy/MM/dd"));
+      }
     } finally {
       setLoading(false);
     }
@@ -80,12 +91,24 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir, onSelectJournal }) => {
       setJournalContent(content);
     } catch (error) {
       console.log("error:", error);
-      setJournalContent(
-        "# " +
-          format(startOfWeek(date, { weekStartsOn: 1 }), "yyyy/MM/dd") +
-          "~" +
-          format(endOfWeek(date, { weekStartsOn: 1 }), "yyyy/MM/dd")
-      );
+      const templatePath = await join(selectedDir, "templates", "weekly.md");
+      if (await exists(templatePath)) {
+        const templateContent = await readTextFile(templatePath);
+        setJournalContent(templateContent);
+        const template = Handlebars.compile(templateContent);
+        const templateVars = {
+          start_date: format(startOfWeek(date, { weekStartsOn: 1 }), "yyyy/MM/dd"),
+          end_date: format(endOfWeek(date, { weekStartsOn: 1 }), "yyyy/MM/dd"),
+        }
+        setJournalContent(template(templateVars));
+      } else {
+        setJournalContent(
+          "# " +
+            format(startOfWeek(date, { weekStartsOn: 1 }), "yyyy/MM/dd") +
+            "~" +
+            format(endOfWeek(date, { weekStartsOn: 1 }), "yyyy/MM/dd")
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -190,7 +213,9 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir, onSelectJournal }) => {
             onSave={handleSave}
           />
         ) : (
-          <div style={styles.placeholder}>Please select date or week number</div>
+          <div style={styles.placeholder}>
+            Please select date or week number
+          </div>
         )}
       </div>
     </div>
