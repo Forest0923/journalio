@@ -37,6 +37,7 @@ import {
   toolbarPlugin,
 } from "@mdxeditor/editor";
 import { useEffect, useRef, useState } from "react";
+import { debounce } from "lodash-es";
 
 function whenInAdmonition(editorInFocus: EditorInFocus | null) {
   const node = editorInFocus?.rootNode;
@@ -52,13 +53,13 @@ function whenInAdmonition(editorInFocus: EditorInFocus | null) {
 }
 
 interface EditorProps {
-  date: string;
+  date: Date;
   content: string;
   onContentChange: (content: string) => void;
   onSave: () => void;
 }
 
-const Toolbar: React.FC<{ onSave: () => void }> = ({ onSave }) => {
+const Toolbar: React.FC = () => {
   return (
     <div>
       <DiffSourceToggleWrapper>
@@ -132,9 +133,6 @@ const Toolbar: React.FC<{ onSave: () => void }> = ({ onSave }) => {
           ]}
         />
       </DiffSourceToggleWrapper>
-      <button style={styles.saveButton} onClick={onSave}>
-        Save
-      </button>
     </div>
   );
 };
@@ -159,16 +157,29 @@ const Editor: React.FC<EditorProps> = ({
   onSave,
 }) => {
   const [localContent, setLocalcontent] = useState(content);
-  // const editorRef = useRef(null);
-  const handleContentChange = (markdown: string) => {
-    console.log("markdown:", markdown);
+
+  const debouncedSetContent = debounce((markdown: string) => {
     setLocalcontent(markdown);
     onContentChange(markdown);
+  }, 1000);
+
+  const handleContentChange = (markdown: string) => {
+    console.log("markdown:", markdown);
+    debouncedSetContent(markdown);
   };
+  
+  const debouncedSave = debounce(() => {
+    onSave();
+    console.log("saved");
+  }, 1000);
 
   useEffect(() => {
     console.log("content:", content);
     setLocalcontent(content);
+    debouncedSave();
+    return () => {
+      debouncedSave.cancel();
+    }
   }, [content]);
 
   return (
@@ -178,7 +189,7 @@ const Editor: React.FC<EditorProps> = ({
         markdown={localContent}
         plugins={[
           toolbarPlugin({
-            toolbarContents: () => <Toolbar onSave={onSave} />,
+            toolbarContents: () => <Toolbar/>,
           }),
           headingsPlugin(),
           listsPlugin(),
@@ -214,21 +225,6 @@ const Editor: React.FC<EditorProps> = ({
       />
     </>
   );
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-  },
-  saveButton: {
-    marginTop: "10px",
-    padding: "10px 20px",
-    fontSize: "16px",
-    alignSelf: "flex-end",
-    cursor: "pointer",
-  },
 };
 
 export default Editor;

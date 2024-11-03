@@ -11,6 +11,10 @@
     "shell:default",
     "dialog:default",
     "fs:default",
-    "fs:allow-app-write"
+    "fs:allow-app-write",
+    {
+      "identifier": "fs:default",
+      "allow": [{ "path": "$HOME/**" }]
+    }
   ]
 }
