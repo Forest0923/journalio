@@ -1,25 +1,27 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { format } from "date-fns";
 
 interface CalendarPanelProps {
-  onDateSelect: (date: string) => void;
+  onDateSelect: (date: Date) => void;
+  onWeekSelect: (week: number, date: Date) => void;
 }
 
-const CalendarPanel: React.FC<CalendarPanelProps> = ({ onDateSelect }) => {
+const CalendarPanel: React.FC<CalendarPanelProps> = ({ onDateSelect, onWeekSelect }) => {
   const [value, setValue] = useState<Date>(new Date());
 
-  const handleChange = (date: Date) => {
-    console.log("date:", date);
+  const handleClickDay = (date: Date) => {
     setValue(date);
-    const formattedDate = format(date, "yyyy-MM-dd");
-    onDateSelect(formattedDate);
+    onDateSelect(date);
   };
+  
+  const handleClickWeekNumber = (weekNumber: number, date: Date) => {
+    onWeekSelect(weekNumber, date);
+  }
 
   return (
-    <div>
-      <Calendar onChange={handleChange} value={value} />
+    <div style={{}}>
+      <Calendar onChange={handleClickDay} value={value} tileContent="" showWeekNumbers={true} onClickWeekNumber={handleClickWeekNumber} />
     </div>
   );
 };
