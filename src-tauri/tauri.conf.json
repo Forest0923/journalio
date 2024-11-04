@@ -21,7 +21,11 @@
   "mainBinaryName": "journalio",
   "version": "0.1.0",
   "identifier": "com.journalio.app",
-  "plugins": {},
+  "plugins": {
+    "fs": {
+      "requireLiteralLeadingDot": false
+    }
+  },
   "app": {
     "security": {
       "csp": null
