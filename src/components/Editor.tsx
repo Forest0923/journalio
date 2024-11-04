@@ -61,79 +61,76 @@ interface EditorProps {
 
 const Toolbar: React.FC = () => {
   return (
-    <div>
-      <DiffSourceToggleWrapper>
-        <ConditionalContents
-          options={[
-            {
-              when: (editor) => editor?.editorType === "codeblock",
-              contents: () => <ChangeCodeMirrorLanguage />,
-            },
-            {
-              fallback: () => (
-                <>
-                  <ConditionalContents
-                    options={[
-                      {
-                        when: whenInAdmonition,
-                        contents: () => <ChangeAdmonitionType />,
-                      },
-                      { fallback: () => <BlockTypeSelect /> },
-                    ]}
-                  />
+    <DiffSourceToggleWrapper>
+      <ConditionalContents
+        options={[
+          {
+            when: (editor) => editor?.editorType === "codeblock",
+            contents: () => <ChangeCodeMirrorLanguage />,
+          },
+          {
+            fallback: () => (
+              <>
+                <ConditionalContents
+                  options={[
+                    {
+                      when: whenInAdmonition,
+                      contents: () => <ChangeAdmonitionType />,
+                    },
+                    { fallback: () => <BlockTypeSelect /> },
+                  ]}
+                />
 
-                  <Separator />
+                <Separator />
 
-                  <UndoRedo />
+                <UndoRedo />
 
-                  <Separator />
+                <Separator />
 
-                  <BoldItalicUnderlineToggles />
-                  <CodeToggle />
+                <BoldItalicUnderlineToggles />
+                <CodeToggle />
 
-                  <Separator />
+                <Separator />
 
-                  <StrikeThroughSupSubToggles />
+                <StrikeThroughSupSubToggles />
 
-                  <Separator />
+                <Separator />
 
-                  <ListsToggle />
+                <ListsToggle />
 
-                  <Separator />
+                <Separator />
 
-                  <CreateLink />
-                  <InsertImage />
+                <CreateLink />
+                <InsertImage />
 
-                  <Separator />
+                <Separator />
 
-                  <InsertTable />
-                  <InsertThematicBreak />
+                <InsertTable />
+                <InsertThematicBreak />
 
-                  <Separator />
+                <Separator />
 
-                  <InsertCodeBlock />
+                <InsertCodeBlock />
 
-                  <ConditionalContents
-                    options={[
-                      {
-                        when: (editorInFocus) =>
-                          !whenInAdmonition(editorInFocus),
-                        contents: () => (
-                          <>
-                            <Separator />
-                            <InsertAdmonition />
-                          </>
-                        ),
-                      },
-                    ]}
-                  />
-                </>
-              ),
-            },
-          ]}
-        />
-      </DiffSourceToggleWrapper>
-    </div>
+                <ConditionalContents
+                  options={[
+                    {
+                      when: (editorInFocus) => !whenInAdmonition(editorInFocus),
+                      contents: () => (
+                        <>
+                          <Separator />
+                          <InsertAdmonition />
+                        </>
+                      ),
+                    },
+                  ]}
+                />
+              </>
+            ),
+          },
+        ]}
+      />
+    </DiffSourceToggleWrapper>
   );
 };
 
@@ -167,7 +164,7 @@ const Editor: React.FC<EditorProps> = ({
     console.log("markdown:", markdown);
     debouncedSetContent(markdown);
   };
-  
+
   const debouncedSave = debounce(() => {
     onSave();
     console.log("saved");
@@ -179,7 +176,7 @@ const Editor: React.FC<EditorProps> = ({
     debouncedSave();
     return () => {
       debouncedSave.cancel();
-    }
+    };
   }, [content]);
 
   return (
@@ -189,7 +186,7 @@ const Editor: React.FC<EditorProps> = ({
         markdown={localContent}
         plugins={[
           toolbarPlugin({
-            toolbarContents: () => <Toolbar/>,
+            toolbarContents: () => <Toolbar />,
           }),
           headingsPlugin(),
           listsPlugin(),

@@ -25,8 +25,25 @@ const DirectorySelector: React.FC<DirectorySelectorProps> = ({
   };
 
   return (
-    <div>
-      <button onClick={handleSelectDirectory}>Open</button>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <button
+        onClick={handleSelectDirectory}
+        style={{
+          paddingTop: "10px",
+          paddingBottom: "10px",
+          paddingLeft: "25px",
+          paddingRight: "25px",
+        }}
+      >
+        Open
+      </button>
     </div>
   );
 };
