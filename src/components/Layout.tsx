@@ -4,7 +4,6 @@ import Editor from "./Editor";
 import {
   readTextFile,
   writeFile,
-  BaseDirectory,
   mkdir,
   exists,
 } from "@tauri-apps/plugin-fs";
@@ -44,9 +43,7 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
         `${formattedDate}.md`
       );
 
-      const content = await readTextFile(filePath, {
-        baseDir: BaseDirectory.AppConfig,
-      });
+      const content = await readTextFile(filePath);
       console.log("content:", content);
       setJournalContent(content);
     } catch (error) {
@@ -82,9 +79,7 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
         (getMonth(date) + 1).toString(),
         `${year}-week${week}.md`
       );
-      const content = await readTextFile(filePath, {
-        baseDir: BaseDirectory.AppConfig,
-      });
+      const content = await readTextFile(filePath);
       console.log("content:", content);
       setJournalContent(content);
     } catch (error) {
@@ -148,7 +143,7 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
     console.log("journalContent:", journalContent);
     console.log("contentBuffer:", contentBuffer);
 
-    if (!(await exists(directoryPath, { baseDir: BaseDirectory.AppConfig }))) {
+    if (!(await exists(directoryPath))) {
       console.log("creating directory");
       await mkdir(directoryPath, { recursive: true });
     }

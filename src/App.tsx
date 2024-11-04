@@ -3,7 +3,7 @@ import DirectorySelector from "./components/DirectorySelector";
 import Layout from "./components/Layout";
 import { format, parse, query } from "kdljs";
 import { BaseDirectory, join } from "@tauri-apps/api/path";
-import { exists, readTextFile, writeFile } from "@tauri-apps/plugin-fs";
+import { exists, mkdir, readTextFile, writeFile } from "@tauri-apps/plugin-fs";
 
 const App: React.FC = () => {
   const [selectedDir, setSelectedDir] = useState<string | null>(null);
@@ -27,6 +27,13 @@ const App: React.FC = () => {
 
   const saveConfig = async (content: string) => {
     const configPath = await join("journalio", "config.kdl");
+    if (!(await exists("journalio", { baseDir: BaseDirectory.Config }))) {
+      console.log("creating directory");
+      await mkdir("journalio", {
+        baseDir: BaseDirectory.Config,
+        recursive: true,
+      });
+    }
     await writeFile(configPath, new TextEncoder().encode(content), {
       baseDir: BaseDirectory.Config,
     });
@@ -87,9 +94,7 @@ const App: React.FC = () => {
       {!selectedDir ? (
         <DirectorySelector onSelectDirectory={handleOnSelectDirectory} />
       ) : (
-        <Layout
-          selectedDir={selectedDir}
-        />
+        <Layout selectedDir={selectedDir} />
       )}
     </div>
   );
