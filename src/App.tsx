@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import DirectorySelector from "./components/DirectorySelector";
 import Layout from "./components/Layout";
-import { JournalEntry } from "./types";
 import { format, parse, query } from "kdljs";
 import { BaseDirectory, join } from "@tauri-apps/api/path";
 import { exists, readTextFile, writeFile } from "@tauri-apps/plugin-fs";
 
 const App: React.FC = () => {
   const [selectedDir, setSelectedDir] = useState<string | null>(null);
-  const [journalEntry, setJournalEntry] = useState<JournalEntry | null>(null);
   const [config, setConfig] = useState<string | null>(null);
 
   const readConfig = async () => {
@@ -49,7 +47,7 @@ const App: React.FC = () => {
           tags: {
             properties: {},
             values: [],
-            name: undefined,
+            name: undefined as any,
           },
         },
       ],
@@ -91,7 +89,6 @@ const App: React.FC = () => {
       ) : (
         <Layout
           selectedDir={selectedDir}
-          onSelectJournal={(entry) => setJournalEntry(entry)}
         />
       )}
     </div>

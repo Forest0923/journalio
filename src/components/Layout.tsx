@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Calendar from "./CalendarPanel";
 import Editor from "./Editor";
-import { JournalEntry } from "../types";
 import {
   readTextFile,
   writeFile,
@@ -22,10 +21,9 @@ import Handlebars from "handlebars";
 
 interface LayoutProps {
   selectedDir: string;
-  onSelectJournal: (entry: JournalEntry) => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ selectedDir, onSelectJournal }) => {
+const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null);
   const [journalContent, setJournalContent] = useState<string>("");
@@ -59,7 +57,7 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir, onSelectJournal }) => {
         const template = Handlebars.compile(templateContent);
         const templateVars = {
           date: format(date, "yyyy/MM/dd"),
-        }
+        };
         setJournalContent(template(templateVars));
       } else {
         setJournalContent("# " + format(date, "yyyy/MM/dd"));
@@ -97,9 +95,12 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir, onSelectJournal }) => {
         setJournalContent(templateContent);
         const template = Handlebars.compile(templateContent);
         const templateVars = {
-          start_date: format(startOfWeek(date, { weekStartsOn: 1 }), "yyyy/MM/dd"),
+          start_date: format(
+            startOfWeek(date, { weekStartsOn: 1 }),
+            "yyyy/MM/dd"
+          ),
           end_date: format(endOfWeek(date, { weekStartsOn: 1 }), "yyyy/MM/dd"),
-        }
+        };
         setJournalContent(template(templateVars));
       } else {
         setJournalContent(

@@ -36,7 +36,7 @@ import {
   thematicBreakPlugin,
   toolbarPlugin,
 } from "@mdxeditor/editor";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { debounce } from "lodash-es";
 
 function whenInAdmonition(editorInFocus: EditorInFocus | null) {
@@ -182,7 +182,7 @@ const Editor: React.FC<EditorProps> = ({
   return (
     <>
       <MDXEditor
-        key={date}
+        key={date.toISOString()}
         markdown={localContent}
         plugins={[
           toolbarPlugin({
