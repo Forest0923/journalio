@@ -23,7 +23,7 @@ const CalendarPanel: React.FC<CalendarPanelProps> = ({
   };
 
   return (
-    <div style={{}}>
+    <div style={{ height: "100%" }}>
       <Calendar
         value={value}
         tileContent=""

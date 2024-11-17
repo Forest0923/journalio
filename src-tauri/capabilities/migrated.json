@@ -13,6 +13,7 @@
     {
       "identifier": "fs:default",
       "allow": [{ "path": "$HOME/**" }]
-    }
+    },
+    "core:app:allow-set-app-theme"
   ]
 }

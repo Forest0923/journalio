@@ -34,7 +34,9 @@
       {
         "title": "journalio",
         "width": 1400,
-        "height": 800
+        "minWidth": 1353,
+        "height": 800,
+        "minHeight": 600
       }
     ]
   }

@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import { format, parse, query } from "kdljs";
 import { BaseDirectory, join } from "@tauri-apps/api/path";
 import { exists, mkdir, readTextFile, writeFile } from "@tauri-apps/plugin-fs";
+import "./App.css";
 
 const App: React.FC = () => {
   const [selectedDir, setSelectedDir] = useState<string | null>(null);
@@ -90,7 +91,7 @@ const App: React.FC = () => {
   }, [config]);
 
   return (
-    <div style={{ height: "100vh", width: "100vw" }}>
+    <div>
       {!selectedDir ? (
         <DirectorySelector onSelectDirectory={handleOnSelectDirectory} />
       ) : (
