@@ -38,6 +38,9 @@ import {
 } from "@mdxeditor/editor";
 import { useEffect, useState } from "react";
 import { debounce } from "lodash-es";
+import "@radix-ui/colors/tomato-dark.css";
+import "@radix-ui/colors/mauve-dark.css";
+import { useTheme } from "./ThemeContext";
 
 function whenInAdmonition(editorInFocus: EditorInFocus | null) {
   const node = editorInFocus?.rootNode;
@@ -154,6 +157,7 @@ const Editor: React.FC<EditorProps> = ({
   onSave,
 }) => {
   const [localContent, setLocalcontent] = useState(content);
+  const { currentTheme } = useTheme();
 
   const debouncedSetContent = debounce((markdown: string) => {
     setLocalcontent(markdown);
@@ -182,6 +186,7 @@ const Editor: React.FC<EditorProps> = ({
   return (
     <>
       <MDXEditor
+        className={currentTheme === "dark" ? "dark-theme dark-editor" : ""}
         key={date.toISOString()}
         markdown={localContent}
         plugins={[

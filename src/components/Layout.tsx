@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import Calendar from "./CalendarPanel";
 import Editor from "./Editor";
-import {
-  readTextFile,
-  writeFile,
-  mkdir,
-  exists,
-} from "@tauri-apps/plugin-fs";
+import { readTextFile, writeFile, mkdir, exists } from "@tauri-apps/plugin-fs";
 import { join } from "@tauri-apps/api/path";
 import {
   endOfWeek,
@@ -17,6 +12,9 @@ import {
   startOfWeek,
 } from "date-fns";
 import Handlebars from "handlebars";
+import "@radix-ui/react-icons";
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { useTheme } from "./ThemeContext";
 
 interface LayoutProps {
   selectedDir: string;
@@ -151,11 +149,12 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
     await writeFile(filePath, contentBuffer);
   };
 
-  let styles = getStyles(isSidebarOpen);
+  const { currentTheme, toggleTheme } = useTheme();
+  let styles = getStyles(isSidebarOpen, currentTheme);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
-    styles = getStyles(isSidebarOpen);
+    styles = getStyles(isSidebarOpen, currentTheme);
   };
 
   const handleTodayClick = () => {
@@ -175,29 +174,40 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
 
   return (
     <div style={styles.container}>
-      {isSidebarOpen ? (
-        <div style={styles.sidebar}>
+      <div style={styles.sidebar}>
+        {isSidebarOpen ? (
+          <>
+            <button onClick={toggleSidebar} style={styles.toggleButton}>
+              {"<<"}
+            </button>
+            <div style={{ flexDirection: "row", display: "flex" }}>
+              <button onClick={handleTodayClick} style={styles.button}>
+                Today
+              </button>
+              <button onClick={handleThisWeekClick} style={styles.button}>
+                This Week
+              </button>
+              <button onClick={toggleTheme} style={styles.theme_button}>
+                {currentTheme === "dark" ? (
+                  <MoonIcon color="white" />
+                ) : (
+                  <SunIcon color="black" />
+                )}
+              </button>
+            </div>
+            <div style={styles.calendarPanel}>
+              <Calendar
+                onDateSelect={handleDateSelect}
+                onWeekSelect={handleWeekSelect}
+              />
+            </div>
+          </>
+        ) : (
           <button onClick={toggleSidebar} style={styles.toggleButton}>
-            {"<<"}
+            {">>"}
           </button>
-          <div style={{ flexDirection: "row", display: "flex" }}>
-            <button onClick={handleTodayClick} style={styles.button}>
-              Today
-            </button>
-            <button onClick={handleThisWeekClick} style={styles.button}>
-              This Week
-            </button>
-          </div>
-          <Calendar
-            onDateSelect={handleDateSelect}
-            onWeekSelect={handleWeekSelect}
-          />
-        </div>
-      ) : (
-        <button onClick={toggleSidebar} style={styles.toggleButton}>
-          {">>"}
-        </button>
-      )}
+        )}
+      </div>
       <div style={styles.main}>
         {loading ? (
           <div>Loading...</div>
@@ -219,45 +229,73 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
 };
 
 const getStyles = (
-  isSidebarOpen: boolean
+  isSidebarOpen: boolean,
+  currentTheme: string
 ): { [key: string]: React.CSSProperties } => ({
   container: {
     display: "flex",
     height: "100%",
+    minHeight: "100vh",
+    backgroundColor: currentTheme === "dark" ? "#1a1a1a" : "#fff",
   },
   sidebar: {
+    position: "fixed",
     display: "flex",
     flexDirection: "column",
-    width: "317px",
-    borderRight: "1px solid #ddd",
-    padding: "5px",
-    paddingRight: "15px",
+    height: "100%",
+    width: isSidebarOpen ? "317px" : "40px",
+    borderRight: currentTheme === "dark" ? "1px solid #777" : "1px solid #aaa",
     boxSizing: "border-box",
+    backgroundColor: currentTheme === "dark" ? "#222" : "#fff",
   },
   main: {
     flex: 1,
+    marginLeft: isSidebarOpen ? "317px" : "40px",
+    height: "100%",
     padding: "20px",
     boxSizing: "border-box",
+    backgroundColor: currentTheme === "dark" ? "#1a1a1a" : "#fff",
   },
   placeholder: {
     color: "#888",
     fontSize: "18px",
     textAlign: "center",
     marginTop: "50px",
+    height: "100%",
+    minHeight: "100vh",
   },
   toggleButton: {
     cursor: "pointer",
     height: isSidebarOpen ? "30px" : "100%",
+    width: "100%",
     padding: "5px",
-    margin: "5px",
-    background: "#f0f0f0",
-    border: "none",
+    background: currentTheme === "dark" ? "#222" : "#fff",
+    borderTop: currentTheme === "dark" ? "solid 1px #777" : "solid 1px #aaa",
+    borderRight: "0px",
+    borderBottom: currentTheme === "dark" ? "solid 1px #777" : "solid 1px #aaa",
+    borderLeft: currentTheme === "dark" ? "solid 1px #777" : "solid 1px #aaa",
     fontSize: "16px",
+    color: currentTheme === "dark" ? "#fff" : "#000",
   },
   button: {
-    margin: "5px",
+    margin: "5px 0 0 5px",
     width: "50%",
     height: "30px",
+    border: "none",
+    borderRadius: "5px",
+    background: currentTheme === "dark" ? "#555" : "#ddd",
+    color: currentTheme === "dark" ? "#fff" : "#000",
+  },
+  theme_button: {
+    margin: "5px 5px 0 5px",
+    width: "30px",
+    height: "30px",
+    borderRadius: "50%",
+    border: "none",
+    background: currentTheme === "dark" ? "#555" : "#ddd",
+  },
+  calendarPanel: {
+    padding: "5px",
   },
 });
 
