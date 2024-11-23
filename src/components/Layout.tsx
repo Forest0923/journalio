@@ -173,8 +173,8 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.sidebar}>
+    <div className="container" style={styles.container}>
+      <div className="sidebar" style={styles.sidebar}>
         {isSidebarOpen ? (
           <>
             <button onClick={toggleSidebar} style={styles.toggleButton}>
@@ -187,7 +187,7 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
               <button onClick={handleThisWeekClick} style={styles.button}>
                 This Week
               </button>
-              <button onClick={toggleTheme} style={styles.theme_button}>
+              <button onClick={toggleTheme} style={styles.themeButton}>
                 {currentTheme === "dark" ? (
                   <MoonIcon color="white" />
                 ) : (
@@ -208,7 +208,7 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
           </button>
         )}
       </div>
-      <div style={styles.main}>
+      <div className="main" style={styles.main}>
         {loading ? (
           <div>Loading...</div>
         ) : selectedDate ? (
@@ -219,8 +219,8 @@ const Layout: React.FC<LayoutProps> = ({ selectedDir }) => {
             onSave={handleSave}
           />
         ) : (
-          <div style={styles.placeholder}>
-            Please select date or week number
+          <div style={styles.message}>
+            <div>Please select date or week number</div>
           </div>
         )}
       </div>
@@ -234,7 +234,6 @@ const getStyles = (
 ): { [key: string]: React.CSSProperties } => ({
   container: {
     display: "flex",
-    height: "100%",
     minHeight: "100vh",
     backgroundColor: currentTheme === "dark" ? "#1a1a1a" : "#fff",
   },
@@ -242,7 +241,7 @@ const getStyles = (
     position: "fixed",
     display: "flex",
     flexDirection: "column",
-    height: "100%",
+    minHeight: "100vh",
     width: isSidebarOpen ? "317px" : "40px",
     borderRight: currentTheme === "dark" ? "1px solid #777" : "1px solid #aaa",
     boxSizing: "border-box",
@@ -251,18 +250,18 @@ const getStyles = (
   main: {
     flex: 1,
     marginLeft: isSidebarOpen ? "317px" : "40px",
-    height: "100%",
     padding: "20px",
     boxSizing: "border-box",
     backgroundColor: currentTheme === "dark" ? "#1a1a1a" : "#fff",
   },
-  placeholder: {
+  message: {
     color: "#888",
     fontSize: "18px",
-    textAlign: "center",
-    marginTop: "50px",
     height: "100%",
-    minHeight: "100vh",
+    alignContent: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   toggleButton: {
     cursor: "pointer",
@@ -286,7 +285,7 @@ const getStyles = (
     background: currentTheme === "dark" ? "#555" : "#ddd",
     color: currentTheme === "dark" ? "#fff" : "#000",
   },
-  theme_button: {
+  themeButton: {
     margin: "5px 5px 0 5px",
     width: "30px",
     height: "30px",
