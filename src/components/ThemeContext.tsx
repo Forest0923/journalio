@@ -1,5 +1,12 @@
 import { setTheme } from "@tauri-apps/api/app";
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { platform } from "@tauri-apps/plugin-os";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 const ThemeContext = createContext({
   currentTheme: "light",
@@ -8,9 +15,12 @@ const ThemeContext = createContext({
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [currentTheme, setCurrentTheme] = useState("dark");
+  const platformName = platform();
   const toggleTheme = () => {
     setCurrentTheme(currentTheme === "dark" ? "light" : "dark");
-    setTheme(currentTheme === "dark" ? "light" : "dark");
+    if (platformName !== "macos") {
+      setTheme(currentTheme === "dark" ? "light" : "dark");
+    }
   };
   useEffect(() => {
     document.documentElement.setAttribute("dark-theme", currentTheme);

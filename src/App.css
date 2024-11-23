@@ -13,7 +13,34 @@ html {
   width: 100%;
 }
 
+.container,
+.main {
+  height: "100%";
+}
+
 /* mdxeditor */
+.mdxeditor {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mdxeditor-toolbar {
+  height: 32;
+}
+
+.mdxeditor-diff-source-wrapper {
+  flex: 1;
+  height: 100%;
+}
+
+.mdxeditor-rich-text-editor,
+.mdxeditor-root-contenteditable,
+.editable,
+._contentEditable_uazmk_379 {
+  height: 100%;
+}
+
 .dark-editor {
   --accentBase: var(--tomato-1);
   --accentBgSubtle: var(--tomato-2);
