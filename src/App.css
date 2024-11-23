@@ -14,8 +14,7 @@ html {
 }
 
 .container,
-.main,
-.sidebar {
+.main {
   height: "100%";
 }
 

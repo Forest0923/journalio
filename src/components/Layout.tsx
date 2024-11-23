@@ -241,6 +241,7 @@ const getStyles = (
     position: "fixed",
     display: "flex",
     flexDirection: "column",
+    height: "100%",
     minHeight: "100vh",
     width: isSidebarOpen ? "317px" : "40px",
     borderRight: currentTheme === "dark" ? "1px solid #777" : "1px solid #aaa",
