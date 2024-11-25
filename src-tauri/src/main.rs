@@ -1,6 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use std::env;
 use std::fs;
 
 #[tauri::command]
@@ -14,6 +15,7 @@ fn write_file(path: String, content: String) -> Result<(), String> {
 }
 
 fn main() {
+    env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
