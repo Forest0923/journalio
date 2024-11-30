@@ -1,6 +1,6 @@
 [package]
 name = "journalio"
-version = "0.1.0"
+version = "1.0.0"
 description = "JournalIO is a WYSIWYG markdown editor designed for writing daily and weekly journals."
 authors = ["Masahiro Mori"]
 edition = "2021"
