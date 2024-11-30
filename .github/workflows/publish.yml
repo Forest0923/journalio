@@ -1,0 +1,11 @@
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: macos14
+    steps:
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn tauri build
