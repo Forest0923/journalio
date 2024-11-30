@@ -2,7 +2,7 @@ on: [pull_request,workflow_dispatch]
 
 jobs:
   build:
-    runs-on: macos14
+    runs-on: macos-14
     steps:
       - name: Install dependencies
         run: yarn install
