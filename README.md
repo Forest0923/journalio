@@ -9,7 +9,9 @@ This application is only tested on Linux and MacOS for now.
 - Arch
 
 ```bash
-# TBW
+paru -S journalio
+# or
+yay -S journalio
 ```
 
 - MacOS
