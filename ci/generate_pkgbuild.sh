@@ -1,5 +1,5 @@
 #!/bin/bash
-cat << EOF > tmp
+cat << EOF > PKGBUILD
 pkgname=journalio
 pkgver=${RELEASE_TAG}
 pkgrel=1
