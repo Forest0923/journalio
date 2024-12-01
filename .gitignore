@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# pacman makepkg
+journalio*.pkg.tar.zst
+journalio*.deb
+pkg/
+control.tar.gz
+data.tar.gz
+debian-binary

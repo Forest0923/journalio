@@ -17,9 +17,9 @@
       "icons/icon.ico"
     ]
   },
-  "productName": "journalio",
+  "productName": "JournalIO",
   "mainBinaryName": "journalio",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "identifier": "com.journalio.app",
   "plugins": {
     "fs": {
@@ -32,7 +32,7 @@
     },
     "windows": [
       {
-        "title": "journalio",
+        "title": "JournalIO",
         "width": 1400,
         "minWidth": 1353,
         "height": 800,
