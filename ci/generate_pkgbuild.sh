@@ -1,5 +1,7 @@
+#!/bin/bash
+cat << EOF > tmp
 pkgname=journalio
-pkgver=1.0.0
+pkgver=${RELEASE_TAG}
 pkgrel=1
 pkgdesc="JournalIO is a WYSIWYG markdown editor designed for writing daily and weekly journals."
 arch=('x86_64')
@@ -13,3 +15,4 @@ sha256sums_x86_64=('SKIP')
 package() {
 	tar -xz -f data.tar.gz -C "$pkgdir"
 }
+EOF

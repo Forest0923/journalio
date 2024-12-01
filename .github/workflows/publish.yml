@@ -1,4 +1,8 @@
-on: [pull_request,workflow_dispatch]
+# https://github.com/tauri-apps/tauri-action
+on:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   publish-tauri:
