@@ -17,7 +17,8 @@ yay -S journalio
 - MacOS
 
 ```bash
-# TBW
+brew tap Forest0923/tap
+brew install journalio
 ```
 
 - Build from source
