@@ -19,7 +19,7 @@
   },
   "productName": "JournalIO",
   "mainBinaryName": "journalio",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "identifier": "com.journalio.app",
   "plugins": {
     "fs": {
