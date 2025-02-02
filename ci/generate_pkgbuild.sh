@@ -3,7 +3,7 @@ VERSION=${RELEASE_TAG#v}
 cat << EOF > PKGBUILD
 pkgname=journalio
 pkgver=${VERSION}
-pkgrel=2
+pkgrel=1
 pkgdesc="JournalIO is a WYSIWYG markdown editor designed for writing daily and weekly journals."
 arch=('x86_64')
 url="https://github.com/Forest0923/journalio"
