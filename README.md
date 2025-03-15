@@ -1,6 +1,16 @@
 # JournalIO
 
+> **Notice:**
+>
+> This project was archived and no longer maintained.
+> I created JournalIO because I needed an Obsidian-like WYSIWYG markdown editor that can be used freely for work.
+> Obsidian required a license for commercial use before, but now it is free for commercial use (https://obsidian.md/blog/free-for-work/).
+
 JournalIO is a WYSIWYG markdown editor designed for writing daily and weekly journals. It is built with Tauri, React, and Typescript.
+
+## Example
+
+![JournalIO](./journalio_example.png)
 
 ## Install
 
